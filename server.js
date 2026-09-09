@@ -922,8 +922,17 @@ function createApp({ storageDir = process.env.STORAGE_DIR || (process.env.VERCEL
       if (req.method === 'GET' && /^\/s\/[A-Za-z0-9_-]+$/.test(pathname)) return serveStatic(res, 'share.html');
       if (req.method === 'GET' && pathname === '/share.js') return serveStatic(res, 'share.js');
 
+      // Debug API
+      if (req.method === 'GET' && (pathname === '/api/debug' || (req.url && req.url.includes('debug')))) {
+        return json(res, 200, {
+          url: req.url,
+          matchedPath: req.headers['x-matched-path'],
+          headers: req.headers
+        });
+      }
+
       // Network API
-      if (req.method === 'GET' && pathname === '/api/network') {
+      if (req.method === 'GET' && (pathname === '/api/network' || req.url === '/api/network' || (req.url && req.url.includes('/api/network')))) {
         const interfaces = getNetworkInterfaces();
         return json(res, 200, {
           addresses: localAddresses(),
