@@ -1,8 +1,13 @@
 {
-  "name": "quickdrop-share",
-  "cleanUrls": true,
+  "version": 2,
   "rewrites": [
-    { "source": "/s/:path*", "destination": "/share.html" },
-    { "source": "/api/:path*", "destination": "/api/index.js" }
+    {
+      "source": "/s/:path*",
+      "destination": "/share.html"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/server.js"
+    }
   ]
 }

@@ -908,9 +908,9 @@ function createApp({ storageDir = process.env.STORAGE_DIR || (process.env.VERCEL
     json(res, 200, { ok: true });
   }
 
-  // --- HTTP ROUTER ---
   const handler = async (req, res) => {
-    const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+    const rawPath = req.headers['x-matched-path'] || req.url;
+    const url = new URL(rawPath, `http://${req.headers.host || 'localhost'}`);
     const pathname = url.pathname;
 
     try {
@@ -1070,15 +1070,21 @@ if (require.main === module) {
   });
 }
 
-module.exports = {
-  createApp,
-  parseRange,
-  safeFilename,
-  localAddresses,
-  getNetworkInterfaces,
-  hashPin,
-  verifyPin,
-  createAccessToken,
-  verifyAccessToken,
-  updateCrc32
-};
+let defaultApp = null;
+function getHandler(req, res) {
+  if (!defaultApp) defaultApp = createApp();
+  return defaultApp.handler(req, res);
+}
+
+getHandler.createApp = createApp;
+getHandler.parseRange = parseRange;
+getHandler.safeFilename = safeFilename;
+getHandler.localAddresses = localAddresses;
+getHandler.getNetworkInterfaces = getNetworkInterfaces;
+getHandler.hashPin = hashPin;
+getHandler.verifyPin = verifyPin;
+getHandler.createAccessToken = createAccessToken;
+getHandler.verifyAccessToken = verifyAccessToken;
+getHandler.updateCrc32 = updateCrc32;
+
+module.exports = getHandler;
