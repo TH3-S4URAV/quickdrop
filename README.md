@@ -1,6 +1,12 @@
 # QuickDrop Final V3 🚀
 
+[![Live Demo on Vercel](https://img.shields.io/badge/Vercel-Live_Demo-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://quickdrop-share-one.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/TH3-S4URAV/quickdrop)
+
 QuickDrop is a fast, lightweight, browser-based file-sharing application supporting both **Nearby Transfer** (local Wi-Fi) and **Remote Transfer** (public internet/WAN).
+
+- **🌐 Live Production URL**: [https://quickdrop-share-one.vercel.app](https://quickdrop-share-one.vercel.app)
+- **💻 GitHub Source**: [https://github.com/TH3-S4URAV/quickdrop](https://github.com/TH3-S4URAV/quickdrop)
 
 It transfers small documents or massive files (up to 10+ GB) seamlessly across laptops and smartphones without requiring third-party cloud apps, account registration, or native app installations.
 
