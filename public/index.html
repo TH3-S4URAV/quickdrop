@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0a1020">
+    <title>QuickDrop — Local &amp; Remote File Sharing</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="QuickDrop home">
+          <span class="brand-mark" aria-hidden="true">↗</span>
+          <span>QuickDrop</span>
+        </a>
+        <div class="mode-nav" role="tablist" aria-label="Transfer Modes">
+          <button class="mode-tab is-active" id="tab-nearby" role="tab" aria-selected="true" type="button">
+            <span class="tab-icon" aria-hidden="true">📶</span>
+            <span>Nearby</span>
+            <span class="tab-badge">Wi‑Fi</span>
+          </button>
+          <button class="mode-tab" id="tab-remote" role="tab" aria-selected="false" type="button">
+            <span class="tab-icon" aria-hidden="true">🌐</span>
+            <span>Remote</span>
+            <span class="tab-badge">Anywhere</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ============================================== -->
+      <!-- NEARBY TRANSFER MODE (100% LOCAL LAN, 0 CLOUD) -->
+      <!-- ============================================== -->
+      <section id="section-nearby" class="mode-section" aria-labelledby="nearby-title">
+        <div class="hero">
+          <div class="eyebrow">NO ACCOUNTS · NO CLOUD · DIRECT WI‑FI</div>
+          <h1 id="nearby-title">Send nearby.<br><em>Keep it local.</em></h1>
+          <p>Instant high-speed transfers between laptops and phones on the same Wi‑Fi without touching the internet.</p>
+        </div>
+
+        <div class="share-panel" aria-labelledby="nearby-send-title">
+          <div class="panel-heading">
+            <div>
+              <p class="step-label">01 — SELECT</p>
+              <h2 id="nearby-send-title">Choose a file to share</h2>
+            </div>
+            <span class="file-note">Supports files up to 10+ GB</span>
+          </div>
+
+          <label class="drop-zone" id="nearby-drop-zone" for="nearby-file-input">
+            <input id="nearby-file-input" type="file">
+            <span class="upload-icon" aria-hidden="true">↑</span>
+            <span class="drop-title">Drop a file here</span>
+            <span class="drop-subtitle">or <u>browse your device</u></span>
+          </label>
+
+          <div class="selected-file is-hidden" id="nearby-selected-file" aria-live="polite">
+            <span class="file-icon" id="nearby-file-icon" aria-hidden="true">▣</span>
+            <div class="file-details">
+              <strong id="nearby-file-name"></strong>
+              <div class="file-subtext">
+                <span id="nearby-file-size"></span>
+                <span class="file-ext-badge" id="nearby-file-ext"></span>
+              </div>
+            </div>
+            <button class="text-button" id="nearby-clear-file" type="button">Change</button>
+          </div>
+
+          <div class="upload-status is-hidden" id="nearby-upload-status" aria-live="polite">
+            <div class="progress-meta">
+              <span id="nearby-upload-label">Preparing your local share…</span>
+              <span class="speed-badge" id="nearby-upload-speed">0 MB/s</span>
+              <span id="nearby-upload-percent">0%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" id="nearby-progress-fill"></div></div>
+            <div class="progress-sub-meta">
+              <span id="nearby-upload-transferred">0 MB / 0 MB</span>
+              <span id="nearby-upload-eta">Calculating ETA…</span>
+            </div>
+          </div>
+
+          <button class="primary-button" id="nearby-share-button" type="button" disabled>
+            Create local sharing link <span aria-hidden="true">→</span>
+          </button>
+          <p class="error-message is-hidden" id="nearby-error-message" role="alert"></p>
+        </div>
+
+        <div class="link-panel is-hidden" id="nearby-link-panel" aria-labelledby="nearby-link-title" aria-live="polite">
+          <div class="success-mark" aria-hidden="true">✓</div>
+          <div class="panel-heading">
+            <div>
+              <p class="step-label">02 — SHARE</p>
+              <h2 id="nearby-link-title">Your local link is ready</h2>
+            </div>
+            <span class="sharing-badge">Local Share</span>
+          </div>
+          <p class="share-copy">Scan the QR code with any phone camera, or open the link on any laptop connected to the same Wi‑Fi.</p>
+
+          <div class="network-select-row is-hidden" id="nearby-network-row">
+            <label for="nearby-network-select" class="network-label">Wi‑Fi / Network:</label>
+            <select id="nearby-network-select" aria-label="Select network interface"></select>
+          </div>
+
+          <div class="qr-container">
+            <div class="qr-card">
+              <div id="nearby-qrcode" class="qrcode" aria-label="QR Code to download file"></div>
+              <div class="qr-label">
+                <span class="qr-camera-icon" aria-hidden="true">📷</span>
+                <span>Point phone camera to scan</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="link-row">
+            <input id="nearby-share-link" type="text" readonly aria-label="Local sharing link">
+            <button class="copy-button" id="nearby-copy-button" type="button">Copy</button>
+          </div>
+
+          <div class="transfer-monitor" id="nearby-transfer-monitor">
+            <div class="monitor-header">
+              <span class="monitor-indicator is-idle" id="nearby-monitor-dot"></span>
+              <span class="monitor-title" id="nearby-monitor-text">Ready for receiver to connect…</span>
+            </div>
+            <div class="monitor-progress is-hidden" id="nearby-monitor-bar">
+              <div class="progress-track"><div class="progress-fill" id="nearby-monitor-fill"></div></div>
+              <div class="monitor-meta">
+                <span id="nearby-monitor-speed">0 MB/s</span>
+                <span id="nearby-monitor-percent">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="share-actions">
+            <button class="secondary-button" id="nearby-new-share" type="button">Share another file</button>
+            <button class="danger-button" id="nearby-stop-share" type="button">Stop sharing</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- REMOTE TRANSFER MODE (PUBLIC WAN, ANY NETWORK) -->
+      <!-- ============================================== -->
+      <section id="section-remote" class="mode-section is-hidden" aria-labelledby="remote-title">
+        <div class="hero">
+          <div class="eyebrow">ANY DEVICE · ANY NETWORK · UP TO 10 GB</div>
+          <h1 id="remote-title">Send to anyone.<br><em>Any city. Anywhere.</em></h1>
+          <p>Send large videos, documents, or multi-file packs to anyone across the world with resumable chunked transfer &amp; optional PIN protection.</p>
+        </div>
+
+        <div class="share-panel" aria-labelledby="remote-send-title">
+          <div class="panel-heading">
+            <div>
+              <p class="step-label">01 — SELECT FILES</p>
+              <h2 id="remote-send-title">Choose files or a folder</h2>
+            </div>
+            <span class="file-note">Chunked &amp; Resumable</span>
+          </div>
+
+          <label class="drop-zone" id="remote-drop-zone" for="remote-file-input">
+            <input id="remote-file-input" type="file" multiple>
+            <span class="upload-icon" aria-hidden="true">☁</span>
+            <span class="drop-title">Drop files or folders here</span>
+            <span class="drop-subtitle">or <u>browse your device (multi-file supported)</u></span>
+          </label>
+
+          <!-- Multi-file list -->
+          <div class="files-list-box is-hidden" id="remote-files-list-box">
+            <div class="files-list-header">
+              <strong id="remote-files-count">0 files selected</strong>
+              <span class="files-total-size" id="remote-total-size">0 B</span>
+            </div>
+            <ul class="files-list" id="remote-files-list"></ul>
+            <button class="text-button" id="remote-clear-files" type="button">Clear all</button>
+          </div>
+
+          <!-- Remote Sharing Options -->
+          <div class="remote-options-grid">
+            <div class="option-card">
+              <label for="remote-expiry-select" class="option-title">⏳ Share Expiry</label>
+              <select id="remote-expiry-select" class="styled-select">
+                <option value="1">1 hour (Self-destructs quickly)</option>
+                <option value="24" selected>24 hours (Recommended)</option>
+                <option value="168">7 days (Long term)</option>
+              </select>
+            </div>
+
+            <div class="option-card">
+              <label class="option-title checkbox-label">
+                <input type="checkbox" id="remote-pin-toggle">
+                <span>🔒 PIN Protection</span>
+              </label>
+              <input type="password" id="remote-pin-input" class="styled-input is-hidden" placeholder="Enter 4-8 digit PIN" maxlength="8">
+            </div>
+          </div>
+
+          <!-- Chunked Upload Status with Pause / Resume / Cancel -->
+          <div class="upload-status is-hidden" id="remote-upload-status" aria-live="polite">
+            <div class="progress-meta">
+              <span id="remote-upload-label">Uploading chunk 1…</span>
+              <span class="speed-badge" id="remote-upload-speed">0 MB/s</span>
+              <span id="remote-upload-percent">0%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" id="remote-progress-fill"></div></div>
+            <div class="progress-sub-meta">
+              <span id="remote-upload-transferred">0 MB / 0 MB</span>
+              <span id="remote-upload-eta">Calculating ETA…</span>
+            </div>
+            <div class="upload-control-buttons">
+              <button class="secondary-button small-btn" id="remote-pause-btn" type="button">Pause</button>
+              <button class="danger-button small-btn" id="remote-cancel-btn" type="button">Cancel</button>
+            </div>
+          </div>
+
+          <button class="primary-button" id="remote-share-button" type="button" disabled>
+            Upload &amp; Generate Remote Link <span aria-hidden="true">→</span>
+          </button>
+          <p class="error-message is-hidden" id="remote-error-message" role="alert"></p>
+        </div>
+
+        <!-- Remote Share Created Panel -->
+        <div class="link-panel is-hidden" id="remote-link-panel" aria-labelledby="remote-link-title" aria-live="polite">
+          <div class="success-mark" aria-hidden="true">✓</div>
+          <div class="panel-heading">
+            <div>
+              <p class="step-label">02 — PUBLIC SHARE READY</p>
+              <h2 id="remote-link-title">Your remote link is ready</h2>
+            </div>
+            <span class="sharing-badge remote-badge">Public Remote</span>
+          </div>
+          <p class="share-copy">Send this link to anyone via WhatsApp, Telegram, or email. Works from any network, anywhere in the world.</p>
+
+          <div class="badges-row" id="remote-meta-badges">
+            <span class="pill-badge" id="remote-badge-expiry">⏳ 24h Expiry</span>
+            <span class="pill-badge is-hidden" id="remote-badge-pin">🔒 PIN Protected</span>
+            <span class="pill-badge" id="remote-badge-files">📦 1 file</span>
+          </div>
+
+          <div class="qr-container">
+            <div class="qr-card">
+              <div id="remote-qrcode" class="qrcode" aria-label="QR Code to download remote file"></div>
+              <div class="qr-label">
+                <span class="qr-camera-icon" aria-hidden="true">📷</span>
+                <span>Scan to open download link</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="link-row">
+            <input id="remote-share-link" type="text" readonly aria-label="Remote public sharing link">
+            <button class="copy-button" id="remote-copy-button" type="button">Copy</button>
+          </div>
+
+          <!-- Live Download Tracking Monitor -->
+          <div class="transfer-monitor" id="remote-transfer-monitor">
+            <div class="monitor-header">
+              <span class="monitor-indicator is-idle" id="remote-monitor-dot"></span>
+              <span class="monitor-title" id="remote-monitor-text">Waiting for receiver to download…</span>
+            </div>
+            <div class="monitor-progress is-hidden" id="remote-monitor-bar">
+              <div class="progress-track"><div class="progress-fill" id="remote-monitor-fill"></div></div>
+              <div class="monitor-meta">
+                <span id="remote-monitor-speed">0 MB/s</span>
+                <span id="remote-monitor-percent">0%</span>
+              </div>
+            </div>
+            <div class="downloads-counter" id="remote-downloads-counter">
+              <span>Total downloads: <strong id="remote-download-count">0</strong></span>
+            </div>
+          </div>
+
+          <div class="share-actions">
+            <button class="secondary-button" id="remote-new-share" type="button">Share another file</button>
+            <button class="danger-button" id="remote-stop-share" type="button">Delete / Revoke share</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- HOW IT WORKS & FOOTER                          -->
+      <!-- ============================================== -->
+      <section class="how-it-works" aria-label="How QuickDrop works">
+        <article>
+          <span>1</span>
+          <h3>Choose Mode</h3>
+          <p>Nearby for instant Wi‑Fi transfers. Remote for sharing across cities or networks.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <h3>Upload &amp; Share</h3>
+          <p>Streamed chunked uploads up to 10 GB with optional PIN protection.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <h3>Direct Download</h3>
+          <p>Receiver opens in any browser. No app install or account required.</p>
+        </article>
+      </section>
+
+      <p class="privacy-note">
+        <span aria-hidden="true">⌁</span> QuickDrop streams files directly with no accounts, no tracking, and automated expiration cleanup.
+      </p>
+    </main>
+
+    <script src="/qrcode.js" defer></script>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

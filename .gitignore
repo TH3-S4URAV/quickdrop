@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Environment Variables
+.env
+.env.local
+
+# Storage & Upload data
+storage/*.json
+storage/nearby/*
+storage/remote/*
+storage/parts/*
+!storage/nearby/.gitkeep
+!storage/remote/.gitkeep
+!storage/parts/.gitkeep
+*.tmp
+*.part
+*.bin
+
+# System files
+.DS_Store
+Thumbs.db

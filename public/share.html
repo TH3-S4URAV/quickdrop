@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0a1020">
+    <title>QuickDrop — Download File</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="receiver-page">
+    <main class="receiver-shell">
+      <header class="topbar receiver-topbar">
+        <a class="brand" href="/" aria-label="QuickDrop home">
+          <span class="brand-mark" aria-hidden="true">↗</span>
+          <span>QuickDrop</span>
+        </a>
+        <span class="network-state" id="network-state-indicator">
+          <i></i> <span id="network-state-text">Direct Transfer</span>
+        </span>
+      </header>
+
+      <section class="receiver-card" aria-live="polite">
+        <div class="receiver-orb" id="receiver-icon" aria-hidden="true">↓</div>
+        <div class="receiver-badge" id="receiver-badge">READY TO DOWNLOAD</div>
+
+        <h1 id="receiver-title">Getting transfer details…</h1>
+
+        <!-- File Metadata summary -->
+        <div class="receiver-file-meta" id="receiver-meta">
+          <span class="receiver-size" id="receiver-size">Checking size…</span>
+          <span class="file-ext-badge" id="receiver-ext">FILE</span>
+        </div>
+
+        <div class="receiver-expiry-badge is-hidden" id="receiver-expiry-box">
+          <span id="receiver-expiry-text">⏳ Expires in 24 hours</span>
+        </div>
+
+        <p class="receiver-detail" id="receiver-detail">Ready to transfer directly to this device.</p>
+
+        <!-- PIN Protection Unlock Section -->
+        <div class="pin-unlock-box is-hidden" id="pin-unlock-box">
+          <div class="pin-lock-header">
+            <span class="pin-lock-icon" aria-hidden="true">🔒</span>
+            <strong>This transfer is PIN-protected</strong>
+            <p>Please enter the security PIN provided by the sender to unlock.</p>
+          </div>
+          <form class="pin-form" id="pin-form">
+            <div class="pin-input-row">
+              <input type="password" id="pin-input" class="styled-input pin-input" placeholder="Enter PIN" maxlength="12" autocomplete="off" required>
+              <button type="submit" class="primary-button pin-submit-btn" id="pin-submit-btn">Unlock →</button>
+            </div>
+            <p class="error-message is-hidden" id="pin-error" role="alert"></p>
+          </form>
+        </div>
+
+        <!-- Download Actions (Visible when unlocked / not protected) -->
+        <div class="receiver-actions-box" id="receiver-actions-box">
+          <!-- Single File Download Button -->
+          <a class="primary-button download-button is-hidden" id="download-button" href="#" download>
+            Download File <span aria-hidden="true">↓</span>
+          </a>
+
+          <!-- Multi-File Batch Controls -->
+          <div class="batch-controls is-hidden" id="batch-controls">
+            <a class="primary-button download-button zip-button" id="download-all-btn" href="#">
+              Download All as ZIP (📦) <span aria-hidden="true">↓</span>
+            </a>
+            <div class="batch-files-header">
+              <span>Individual Files (<span id="batch-files-count">0</span>)</span>
+            </div>
+            <ul class="batch-files-list" id="batch-files-list"></ul>
+          </div>
+        </div>
+
+        <!-- Receiver In-Page Progress & Speed -->
+        <div class="receiver-progress-box is-hidden" id="receiver-progress-box">
+          <div class="progress-meta">
+            <span id="download-status-label">Transferring…</span>
+            <span class="speed-badge" id="download-speed">0 MB/s</span>
+            <span id="download-percent">0%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="download-fill"></div>
+          </div>
+          <div class="progress-sub-meta">
+            <span id="download-transferred">0 B</span>
+            <span id="download-eta">ETA: --</span>
+          </div>
+        </div>
+
+        <!-- Completion Box -->
+        <div class="completion-box is-hidden" id="completion-box">
+          <span class="completion-icon" aria-hidden="true">✓</span>
+          <strong>Download Complete!</strong>
+          <p id="completion-msg">The file has been saved to your downloads folder.</p>
+        </div>
+
+        <p class="receiver-status" id="receiver-status">Tap download to save directly to this device.</p>
+        <p class="error-message is-hidden" id="receiver-error" role="alert"></p>
+      </section>
+
+      <p class="privacy-note" id="receiver-privacy-note">
+        <span aria-hidden="true">⌁</span> Direct file transfer. No tracking. Auto-expiring storage.
+      </p>
+    </main>
+    <script src="/share.js" defer></script>
+  </body>
+</html>
