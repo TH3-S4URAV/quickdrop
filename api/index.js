@@ -1,4 +1,4 @@
-﻿const path = require('node:path');
+const path = require('node:path');
 const os = require('node:os');
 const { createApp } = require('../server');
 
